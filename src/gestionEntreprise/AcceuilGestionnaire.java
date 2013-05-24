@@ -40,6 +40,13 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         créerEnt = new javax.swing.JButton();
         modifierEnt = new javax.swing.JButton();
         Etude = new javax.swing.JPanel();
+        listeetude = new javax.swing.JComboBox();
+        afficheretude = new javax.swing.JButton();
+        modifieretude = new javax.swing.JButton();
+        creeretude = new javax.swing.JButton();
+        detailetude = new javax.swing.JScrollPane();
+        etude = new javax.swing.JList();
+        jButton2 = new javax.swing.JButton();
         Etudiant = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -74,7 +81,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             .addGroup(AcceuilLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 186, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -138,15 +145,68 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
 
         AcceuilGestionnaire.addTab("Entreprise", Entreprise);
 
+        afficheretude.setText("Afficher");
+        afficheretude.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                afficheretude(evt);
+            }
+        });
+
+        modifieretude.setText("Gérer les participants");
+        modifieretude.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modifieretude(evt);
+            }
+        });
+
+        creeretude.setText("Creer");
+        creeretude.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                creeretude(evt);
+            }
+        });
+
+        detailetude.setViewportView(etude);
+
+        jButton2.setText("Valider");
+
         javax.swing.GroupLayout EtudeLayout = new javax.swing.GroupLayout(Etude);
         Etude.setLayout(EtudeLayout);
         EtudeLayout.setHorizontalGroup(
             EtudeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGroup(EtudeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(EtudeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(detailetude)
+                    .addGroup(EtudeLayout.createSequentialGroup()
+                        .addComponent(listeetude, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(afficheretude)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(creeretude)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2)
+                        .addGap(0, 6, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EtudeLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(modifieretude)
+                .addGap(58, 58, 58))
         );
         EtudeLayout.setVerticalGroup(
             EtudeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 389, Short.MAX_VALUE)
+            .addGroup(EtudeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(EtudeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(listeetude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(afficheretude)
+                    .addComponent(creeretude)
+                    .addComponent(jButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(modifieretude)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(detailetude, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53))
         );
 
         AcceuilGestionnaire.addTab("Etude", Etude);
@@ -216,6 +276,19 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
 
     }//GEN-LAST:event_modifEnt
 
+    private void afficheretude(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afficheretude
+
+    }//GEN-LAST:event_afficheretude
+
+    private void modifieretude(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifieretude
+        Etude e = new Etude("etude 1");
+       // ModifEtude bdd = new ModifEtude(this, true, e);
+    }//GEN-LAST:event_modifieretude
+
+    private void creeretude(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creeretude
+        // TODO add your handling code here:
+    }//GEN-LAST:event_creeretude
+
     /**
      * @param args the command line arguments
      */
@@ -257,14 +330,21 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     private javax.swing.JPanel Etude;
     private javax.swing.JPanel Etudiant;
     private javax.swing.JButton afficherEnt;
+    private javax.swing.JButton afficheretude;
+    private javax.swing.JButton creeretude;
     private javax.swing.JButton créerEnt;
+    private javax.swing.JScrollPane detailetude;
+    private javax.swing.JList etude;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JComboBox listeetude;
     private javax.swing.JButton modifierEnt;
+    private javax.swing.JButton modifieretude;
     // End of variables declaration//GEN-END:variables
 private javax.swing.DefaultListModel ModelEnt = new javax.swing.DefaultListModel();
 
