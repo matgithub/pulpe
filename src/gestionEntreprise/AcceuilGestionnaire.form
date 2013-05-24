@@ -183,7 +183,7 @@
                 <Property name="text" type="java.lang.String" value="cr&#xe9;er"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cr&#xe9;erEnt"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="creerEnt"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="modifierEnt">

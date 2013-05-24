@@ -15,7 +15,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
      */
     public AcceuilGestionnaire() {
         initComponents();
-        setLocation(250, 200);
+        setLocation(200, 150);
     }
 
     /**
@@ -93,7 +93,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         créerEnt.setText("créer");
         créerEnt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                créerEnt(evt);
+                creerEnt(evt);
             }
         });
 
@@ -178,7 +178,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void créerEnt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_créerEnt
+    private void creerEnt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerEnt
         Entreprise e= new Entreprise();
         ModifEntreprise bdd =new ModifEntreprise(this, true, e);
         bdd.setLocation(500, 400);
@@ -187,7 +187,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         //on ajoute la nouvelle ligne à la base :
         
         
-    }//GEN-LAST:event_créerEnt
+    }//GEN-LAST:event_creerEnt
 
     private void afficherEnt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afficherEnt
         // TODO add your handling code here:
