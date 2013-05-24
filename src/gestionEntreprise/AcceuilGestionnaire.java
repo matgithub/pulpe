@@ -15,7 +15,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
      */
     public AcceuilGestionnaire() {
         initComponents();
-        setLocation(200, 150);
+        setLocation(250, 200);
     }
 
     /**
