@@ -15,7 +15,7 @@ public class Entreprise {
     public int id;
     public String nom;
     public String adr;
-    public int tel;
+    public String tel;
 
     public Entreprise() {
         cpt++;
@@ -50,11 +50,11 @@ public class Entreprise {
         this.adr = adr;
     }
 
-    public int getTel() {
+    public String getTel() {
         return tel;
     }
 
-    public void setTel(int tel) {
+    public void setTel(String tel) {
         this.tel = tel;
     }
     

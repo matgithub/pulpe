@@ -22,7 +22,7 @@ public class ModifEntreprise extends javax.swing.JDialog {
         telOrigine=e.tel;
         textNoment.setText(e.nom);
         textAdresse.setText(e.adr);
-        texttel.setText(Integer.toString(e.tel));
+        texttel.setText(e.tel);
     }
 
     /**
@@ -130,10 +130,9 @@ public class ModifEntreprise extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void valider(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valider
-        int tel=Integer.parseInt(texttel.getText());
         e.setAdr(textAdresse.getText());
         e.setNom(textNoment.getText());
-        e.setTel(tel);
+        e.setTel(texttel.getText());
                 
         setVisible(false);    }//GEN-LAST:event_valider
 
@@ -173,6 +172,6 @@ public class ModifEntreprise extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
     String nomOrigine;
     String adrOrigine;
-    int telOrigine;
+    String telOrigine;
     static Entreprise e;
 }
