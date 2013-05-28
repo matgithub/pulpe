@@ -356,11 +356,8 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             resulent.next();
             
                 e.setNom(resulent.getString(2));
-                System.out.println(resulent.getString(2));
                 e.setAdr(resulent.getString(3));
-                System.out.println(resulent.getString(3));
                 e.setTel(resulent.getString(4));
-                System.out.println(resulent.getInt(4));
             
             resulent.close();
             requete.close();
