@@ -1,8 +1,11 @@
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package gestionEntreprise;
+import java.sql.*;
+import java.lang.Class.*;
 
 /**
  *
@@ -13,9 +16,70 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     /**
      * Creates new form AcceuilGestionnaire
      */
+    private Object makeObj(final String item)  {
+     return new Object() { public String toString() { return item; } };
+    }
+    
+    // Ouvre une connexion stockée dans la variable conn
+    public void openConnection() throws java.sql.SQLException {
+        //   String userid = "nom_utilisateur";   // A MODIFIER
+        //   String password = "#########";  // A MODIFIER
+        //   String URL = "jdbc:oracle:thin:@iuta.univ-lyon1.fr:1521:orcl";	// Adresse de l'hote distant
+
+        String userid = "p0907867";   // A MODIFIER
+        String password = "iut2012";  // A MODIFIER
+        String URL = "jdbc:oracle:thin:@iuta.univ-lyon1.fr:1521:orcl";	// Adresse de l'hote distant
+        java.sql.DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+        conn = java.sql.DriverManager.getConnection(URL, userid, password);
+
+        if (conn == null) {
+            Model.addElement("Probleme de connection.");
+            System.exit(1);
+        }
+    }
+    
+    public void closeConnection() throws java.sql.SQLException {
+        conn.close();	// Fermeture de la connection
+    }
+    
     public AcceuilGestionnaire() {
         initComponents();
         setLocation(200, 150);
+        
+        // remplir listes
+        String noment;
+        
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resulent = requete.executeQuery(
+            "select NOMENT from ENTREPRISE");
+            while (resulent.next()) {
+                noment = resulent.getString(1);
+                comboEnt.addItem(makeObj(noment));
+            }
+            resulent.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException e) {
+            Model.addElement("Erreur execution requete " + e.getMessage());
+        }
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resuletu = requete.executeQuery(
+            "select NOMETUDE from ETUDE");
+            while (resuletu.next()) {
+                noment = resuletu.getString(1);
+                listeetude.addItem(makeObj(noment));
+            }
+            resuletu.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException e) {
+            Model.addElement("Erreur execution requete " + e.getMessage());
+        }
+        
     }
 
     /**
@@ -34,8 +98,8 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         Entreprise = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jComboBox1 = new javax.swing.JComboBox();
+        affEnt = new javax.swing.JList();
+        comboEnt = new javax.swing.JComboBox();
         afficherEnt = new javax.swing.JButton();
         créerEnt = new javax.swing.JButton();
         modifierEnt = new javax.swing.JButton();
@@ -88,7 +152,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
 
         AcceuilGestionnaire.addTab("Acceuil", Acceuil);
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(affEnt);
 
         afficherEnt.setText("afficher");
         afficherEnt.addActionListener(new java.awt.event.ActionListener() {
@@ -120,7 +184,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                 .addGroup(EntrepriseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
                     .addGroup(EntrepriseLayout.createSequentialGroup()
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboEnt, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(afficherEnt)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -136,11 +200,11 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                 .addGroup(EntrepriseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(créerEnt)
                     .addComponent(afficherEnt)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboEnt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(modifierEnt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         AcceuilGestionnaire.addTab("Entreprise", Entreprise);
@@ -204,7 +268,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modifieretude)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(detailetude, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53))
         );
@@ -219,7 +283,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         );
         EtudiantLayout.setVerticalGroup(
             EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 389, Short.MAX_VALUE)
+            .addGap(0, 406, Short.MAX_VALUE)
         );
 
         AcceuilGestionnaire.addTab("Etudiant", Etudiant);
@@ -250,7 +314,11 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     }//GEN-LAST:event_creerEnt
 
     private void afficherEnt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afficherEnt
-        // TODO add your handling code here:
+        
+        Model.clear();
+        
+        
+        
     }//GEN-LAST:event_afficherEnt
 
     private void fin(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fin
@@ -329,16 +397,16 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     private javax.swing.JPanel Entreprise;
     private javax.swing.JPanel Etude;
     private javax.swing.JPanel Etudiant;
+    private javax.swing.JList affEnt;
     private javax.swing.JButton afficherEnt;
     private javax.swing.JButton afficheretude;
+    private javax.swing.JComboBox comboEnt;
     private javax.swing.JButton creeretude;
     private javax.swing.JButton créerEnt;
     private javax.swing.JScrollPane detailetude;
     private javax.swing.JList etude;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
@@ -346,6 +414,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     private javax.swing.JButton modifierEnt;
     private javax.swing.JButton modifieretude;
     // End of variables declaration//GEN-END:variables
-private javax.swing.DefaultListModel ModelEnt = new javax.swing.DefaultListModel();
+private javax.swing.DefaultListModel Model = new javax.swing.DefaultListModel();
+private java.sql.Connection conn;
 
 }
