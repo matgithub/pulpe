@@ -319,9 +319,38 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     private void afficherEnt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afficherEnt
         
         Model.clear();
+        int id;
+        String l,req;
+        String [] t;
+        l = comboEnt.getSelectedItem().toString();
+        t = l.split(" ");
+        System.out.println(t[0]);
         
+        id = Integer.parseInt(t[0]);
+        req = "select * from ENTREPRISE where IDENT ="+id;
+        String nom, adr, tel;
         
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resulent = requete.executeQuery(req
+            );
+            resulent.next();
+            
+                nom = resulent.getString(2);
+                adr = resulent.getString(3);
+                tel = resulent.getString(4);
+                
+                Model.addElement(nom+"      "+adr+"         "+tel);
+            
+            resulent.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException ex) {
+            Model.addElement("Erreur execution requete " + ex.getMessage());
+        }
         
+        affEnt.setModel(Model);
     }//GEN-LAST:event_afficherEnt
 
     private void fin(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fin
