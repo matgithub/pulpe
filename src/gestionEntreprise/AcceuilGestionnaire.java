@@ -42,14 +42,12 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         conn.close();	// Fermeture de la connection
     }
     
-    public AcceuilGestionnaire() {
-        initComponents();
-        setLocation(200, 150);
-        
+    public void remplirListes () {
         // remplir listes
         String nom;
         int id;
-        
+        comboEnt.removeAllItems();
+        listeetude.removeAllItems();
         try {
             openConnection();
             java.sql.Statement requete = conn.createStatement();
@@ -82,6 +80,12 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         } catch (java.sql.SQLException e) {
             Model.addElement("Erreur execution requete " + e.getMessage());
         }
+    }
+    
+    public AcceuilGestionnaire() {
+        initComponents();
+        setLocation(200, 150);
+        remplirListes ();
         
     }
 
@@ -306,13 +310,49 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void creerEnt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creerEnt
-        Entreprise e= new Entreprise();
+        int newid=0;
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resul = requete.executeQuery(
+            "select max(IDENT) from entreprise");
+            resul.next();
+            
+            newid = resul.getInt(1);
+            resul.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException e) {
+            Model.addElement("Erreur execution requete " + e.getMessage());
+        }
+        
+        Entreprise e= new Entreprise(newid);
         ModifEntreprise bdd =new ModifEntreprise(this, true, e);
         bdd.setLocation(500, 400);
         bdd.setVisible(true);
         
         //on ajoute la nouvelle ligne à la base :
         
+        try {
+            openConnection();
+            java.sql.PreparedStatement requete = conn.prepareStatement(
+                    "insert into entreprise (IDENT,NOMENT,ADRESSEENT,TELENT) "
+                    + "values (? , ? , ? , ?)");
+            
+            requete.setInt(1,e.getId());
+            requete.setString(2, e.getNom());
+            requete.setString(3, e.getAdr());
+            requete.setString(4, e.getTel());
+            requete.executeUpdate();
+            
+             
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException ex) {
+            Model.addElement("Erreur execution requete " + ex.getMessage());
+        }
+        remplirListes ();
+
         
     }//GEN-LAST:event_creerEnt
 
@@ -324,7 +364,6 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         String [] t;
         l = comboEnt.getSelectedItem().toString();
         t = l.split(" ");
-        System.out.println(t[0]);
         
         id = Integer.parseInt(t[0]);
         req = "select * from ENTREPRISE where IDENT ="+id;
@@ -341,13 +380,30 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                 adr = resulent.getString(3);
                 tel = resulent.getString(4);
                 
-                Model.addElement(nom+"      "+adr+"         "+tel);
+                Model.addElement("nom : "+nom+"      adresse : "+adr+"         teléphone : "+tel);
             
             resulent.close();
             requete.close();
             closeConnection();
         } catch (java.sql.SQLException ex) {
             Model.addElement("Erreur execution requete " + ex.getMessage());
+        }
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resuletu = requete.executeQuery(
+            "select nometude from ETUDE where IDENT ="+id);
+            Model.addElement(" ");
+            Model.addElement("liste des etude demander par cette entreprise :");
+            while (resuletu.next()) {
+                nom = resuletu.getString(1);
+                Model.addElement(nom);
+            }
+            resuletu.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException e) {
+            Model.addElement("Erreur execution requete " + e.getMessage());
         }
         
         affEnt.setModel(Model);
@@ -366,17 +422,17 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     }//GEN-LAST:event_fin
 
     private void modifEnt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifEnt
-        Entreprise e= new Entreprise();
+        
         int id;
         String l,req;
         String [] t;
         l = comboEnt.getSelectedItem().toString();
         t = l.split(" ");
-        System.out.println(t[0]);
         
         id = Integer.parseInt(t[0]);
         req = "select * from ENTREPRISE where IDENT ="+id;
-        
+        Entreprise e= new Entreprise(0);
+        e.setId(id);
         try {
             openConnection();
             java.sql.Statement requete = conn.createStatement();
@@ -400,7 +456,36 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         bdd.setVisible(true);
         
         //après modification :
+        try {
+            openConnection();
+            String reqdel = "delete from ENTREPRISE where IDENT ="+id;
+            java.sql.PreparedStatement requetup = conn.prepareStatement(reqdel);
+            requetup.executeUpdate();
+            try {
+                openConnection();
+                java.sql.PreparedStatement requete = conn.prepareStatement(
+                        "insert into entreprise (IDENT,NOMENT,ADRESSEENT,TELENT) "
+                        + "values (? , ? , ? , ?)");
 
+                requete.setInt(1,e.getId());
+                requete.setString(2, e.getNom());
+                requete.setString(3, e.getAdr());
+                requete.setString(4, e.getTel());
+                requete.executeUpdate();
+
+
+                requete.close();
+                closeConnection();
+            } catch (java.sql.SQLException ex) {
+                Model.addElement("Erreur execution requete " + ex.getMessage());
+            }
+            
+            closeConnection();
+        } catch (java.sql.SQLException ex) {
+            Model.addElement("Erreur execution requete " + ex.getMessage());
+        }
+        
+        remplirListes ();
     }//GEN-LAST:event_modifEnt
 
     private void afficheretude(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afficheretude

@@ -17,7 +17,8 @@ public class Entreprise {
     public String adr;
     public String tel;
 
-    public Entreprise() {
+    public Entreprise(int lastid) {
+        cpt=lastid;
         cpt++;
         this.id = cpt;
     }
