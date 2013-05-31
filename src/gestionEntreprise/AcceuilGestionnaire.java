@@ -226,7 +226,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         modifieretude.setText("Gérer les participants");
         modifieretude.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modifieretude(evt);
+                gererppant(evt);
             }
         });
 
@@ -240,6 +240,11 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         detailetude.setViewportView(etude);
 
         jButton2.setText("Valider");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                valideretude(evt);
+            }
+        });
 
         javax.swing.GroupLayout EtudeLayout = new javax.swing.GroupLayout(Etude);
         Etude.setLayout(EtudeLayout);
@@ -489,17 +494,100 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     }//GEN-LAST:event_modifEnt
 
     private void afficheretude(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afficheretude
-
+        
+        Model.clear();
+        int id;
+        String l,req, req1;
+        String [] t;
+        l = listeetude.getSelectedItem().toString();
+        t = l.split(" ");
+        
+        id = Integer.parseInt(t[0]);
+        req = "select * from ETUDE where IDCONVENTION ="+id;
+        
+        String nomet, identet, dateconv, dureeet, datefin, noment, idconv;
+        
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resulet = requete.executeQuery(req);
+            resulet.next();
+            
+                nomet = resulet.getString(4);
+                identet = resulet.getString(1);
+                dateconv = resulet.getString(3);
+                dureeet = resulet.getString(5);
+                datefin = resulet.getString(6);
+                idconv = resulet.getString(2);
+                
+                req1 = "select * from ENTREPRISE where IDENT="+identet;
+                try {
+                openConnection();
+                java.sql.Statement requete1 = conn.createStatement();
+                java.sql.ResultSet resulet1 = requete.executeQuery(req1);
+                resulet1.next();
+                
+                noment = resulet1.getString(2);
+                
+                Model.addElement("Etude numero " + idconv + " : " + nomet);
+                Model.addElement("Date début : " + dateconv);
+                Model.addElement("Date fin prévue : " + datefin);
+                Model.addElement("Durée de l'etude : " + dureeet);
+                Model.addElement("Entreprise cliente : " + noment);
+                
+                resulet1.close();
+                requete1.close();
+                closeConnection();
+                } catch (java.sql.SQLException ex) {
+                    Model.addElement("Erreur execution requete " + ex.getMessage());
+                }
+            
+            resulet.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException ex) {
+            Model.addElement("Erreur execution requete " + ex.getMessage());
+        }
+        
+        etude.setModel(Model);
+        
     }//GEN-LAST:event_afficheretude
 
-    private void modifieretude(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifieretude
-        Etude e = new Etude("etude 1");
-       // ModifEtude bdd = new ModifEtude(this, true, e);
-    }//GEN-LAST:event_modifieretude
+    private void gererppant(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gererppant
+       
+    }//GEN-LAST:event_gererppant
 
     private void creeretude(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_creeretude
-        // TODO add your handling code here:
+
+        int id = 0;
+        
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resulid = requete.executeQuery("select max(idconvention) from etude");
+            resulid.next();
+            
+                id = resulid.getInt(1);
+            
+            resulid.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException ex) {
+            Model.addElement("Erreur execution requete " + ex.getMessage());
+        }
+        
+        Etude e = new Etude(id);
+        CreationEtude bdd =new CreationEtude(this, true, e);
+        bdd.setLocation(500, 400);
+        bdd.setVisible(true);
+        
+        //on ajoute la nouvelle ligne à la base :
+
     }//GEN-LAST:event_creeretude
+
+    private void valideretude(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valideretude
+        // TODO add your handling code here:
+    }//GEN-LAST:event_valideretude
 
     /**
      * @param args the command line arguments

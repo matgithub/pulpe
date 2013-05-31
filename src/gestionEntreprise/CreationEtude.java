@@ -13,9 +13,66 @@ public class CreationEtude extends javax.swing.JDialog {
     /**
      * Creates new form CreationEtude
      */
-    public CreationEtude(java.awt.Frame parent, boolean modal) {
+    
+    private Object makeObj(final String item)  {
+     return new Object() {@Override
+ public String toString() { return item; } };
+    }
+    
+    // Ouvre une connexion stockée dans la variable conn
+    public void openConnection() throws java.sql.SQLException {
+        //   String userid = "nom_utilisateur";   // A MODIFIER
+        //   String password = "#########";  // A MODIFIER
+        //   String URL = "jdbc:oracle:thin:@iuta.univ-lyon1.fr:1521:orcl";	// Adresse de l'hote distant
+
+        String userid = "p0907867";   // A MODIFIER
+        String password = "iut2012";  // A MODIFIER
+        String URL = "jdbc:oracle:thin:@iuta.univ-lyon1.fr:1521:orcl";	// Adresse de l'hote distant
+        java.sql.DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
+        conn = java.sql.DriverManager.getConnection(URL, userid, password);
+
+        if (conn == null) {
+            Model.addElement("Probleme de connection.");
+            System.exit(1);
+        }
+    }
+    
+    public void closeConnection() throws java.sql.SQLException {
+        conn.close();	// Fermeture de la connection
+    }
+    
+    public CreationEtude(java.awt.Frame parent, boolean modal, Etude e) {
         super(parent, modal);
         initComponents();
+        CreationEtude.e = e;
+        nom = e.nom_etude;
+        dureeet = e.duree;
+        datefin = e.datefin;
+        ent = e.ent;
+        
+        text_intitule.setText(e.nom_etude);
+        text_duree.setText(Integer.toString(e.duree));
+        text_datefin.setText(e.datefin);
+        
+        String nom_ent;
+        int id_ent;
+        
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resul = requete.executeQuery("select * from ENTREPRISE");
+            while (resul.next()) {
+                nom_ent = resul.getString(2);
+                id_ent = resul.getInt(1);
+                listeent.addItem(makeObj(id_ent + " -- " + nom_ent));
+            }
+            resul.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException exc) {
+            Model.addElement("Erreur execution requete " + exc.getMessage());
+        }
+        
     }
 
     /**
@@ -27,6 +84,7 @@ public class CreationEtude extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         intitule_et = new javax.swing.JLabel();
         duree_et = new javax.swing.JLabel();
         datefin_et = new javax.swing.JLabel();
@@ -38,18 +96,6 @@ public class CreationEtude extends javax.swing.JDialog {
         text_datefin = new javax.swing.JTextField();
         listeent = new javax.swing.JComboBox();
         ent_et = new javax.swing.JLabel();
-        equipe = new javax.swing.JLabel();
-        resp_et = new javax.swing.JLabel();
-        listeetudiants1 = new javax.swing.JComboBox();
-        etudiants = new javax.swing.JLabel();
-        listeetudiants2 = new javax.swing.JComboBox();
-        listeetudiants3 = new javax.swing.JComboBox();
-        listeetudiants4 = new javax.swing.JComboBox();
-        jSeparator1 = new javax.swing.JSeparator();
-        listeetudiants5 = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -61,31 +107,28 @@ public class CreationEtude extends javax.swing.JDialog {
 
         datefin_et.setText("Date de fin prévue : ");
 
-        jours.setText("jours");
-
-        semaines.setText("semaines");
-
-        mois.setText("mois");
-
-        ent_et.setText("Entreprise : ");
-
-        equipe.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        equipe.setText("Equipe");
-
-        resp_et.setText("Etudiant responsable : ");
-
-        etudiants.setText("Etudiants : ");
-
-        jButton1.setText("Valider");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1valider(evt);
+        text_duree.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                verifduree(evt);
             }
         });
 
-        jButton2.setText("Effacer");
+        buttonGroup1.add(jours);
+        jours.setText("jours");
 
-        jButton3.setText("Retour");
+        buttonGroup1.add(semaines);
+        semaines.setText("semaines");
+
+        buttonGroup1.add(mois);
+        mois.setText("mois");
+
+        listeent.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                listeent(evt);
+            }
+        });
+
+        ent_et.setText("Entreprise : ");
 
         jButton4.setText("(optionel) creer entreprise");
 
@@ -96,62 +139,32 @@ public class CreationEtude extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(datefin_et)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(text_datefin, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(duree_et)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(text_duree, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jours)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(semaines)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(mois))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(ent_et)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(listeent, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(equipe)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(resp_et)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(listeetudiants1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGap(18, 18, 18)
-                            .addComponent(jButton4))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(intitule_et)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(text_intitule, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jSeparator1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(36, 36, 36)
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
-                                .addComponent(jButton2))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(etudiants)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(listeetudiants4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(listeetudiants2, 0, 200, Short.MAX_VALUE))))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(listeetudiants3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(listeetudiants5, 0, 223, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(datefin_et)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3)
-                                .addGap(45, 45, 45)))))
+                                .addComponent(text_datefin, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(duree_et)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(text_duree, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jours)
+                                .addGap(18, 18, 18)
+                                .addComponent(semaines)
+                                .addGap(18, 18, 18)
+                                .addComponent(mois))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ent_et)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(listeent, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(intitule_et)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(text_intitule, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -177,103 +190,51 @@ public class CreationEtude extends javax.swing.JDialog {
                     .addComponent(ent_et)
                     .addComponent(listeent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(equipe)
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(resp_et)
-                    .addComponent(listeetudiants1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(etudiants)
-                    .addComponent(listeetudiants2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listeetudiants3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(listeetudiants4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(listeetudiants5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1valider(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1valider
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1valider
+    private void listeent(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_listeent
+        noment = evt.getItem( ).toString( );
+    }//GEN-LAST:event_listeent
+
+    private void verifduree(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_verifduree
+        Character c = evt.getKeyChar();
+        
+        if (!(Character.isDigit(c))) {
+           evt.consume();
+        }
+    }//GEN-LAST:event_verifduree
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CreationEtude.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CreationEtude.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CreationEtude.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CreationEtude.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                CreationEtude dialog = new CreationEtude(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel datefin_et;
     private javax.swing.JLabel duree_et;
     private javax.swing.JLabel ent_et;
-    private javax.swing.JLabel equipe;
-    private javax.swing.JLabel etudiants;
     private javax.swing.JLabel intitule_et;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JRadioButton jours;
     private javax.swing.JComboBox listeent;
-    private javax.swing.JComboBox listeetudiants1;
-    private javax.swing.JComboBox listeetudiants2;
-    private javax.swing.JComboBox listeetudiants3;
-    private javax.swing.JComboBox listeetudiants4;
-    private javax.swing.JComboBox listeetudiants5;
     private javax.swing.JRadioButton mois;
-    private javax.swing.JLabel resp_et;
     private javax.swing.JRadioButton semaines;
     private javax.swing.JTextField text_datefin;
     private javax.swing.JTextField text_duree;
     private javax.swing.JTextField text_intitule;
     // End of variables declaration//GEN-END:variables
+    private javax.swing.DefaultListModel Model = new javax.swing.DefaultListModel();
+    private java.sql.Connection conn;
+
+    String nom;
+    int dureeet;
+    String datefin;
+    Entreprise ent;
+    String noment;
+    int nbjour, nbsemaine, nbmois;
+    
+    static Etude e;
 }

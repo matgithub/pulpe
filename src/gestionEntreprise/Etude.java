@@ -14,10 +14,17 @@ public class Etude {
     public int id_etude;
     public String nom_etude;
     public int duree;
-    public Entreprise e;
+    public Entreprise ent;
 //    public Etudiant etu;
-    public int datefin;
-
+    public String datefin;
+    public String dateconv;
+    
+    public Etude(int lastid) {
+        cpt = lastid;
+        cpt++;
+        this.id_etude = cpt;
+    }
+    
     public int getId_etude() {
         return id_etude;
     }
@@ -42,11 +49,11 @@ public class Etude {
         this.duree = duree;
     }
 
-    public int getDatefin() {
+    public String getDatefin() {
         return datefin;
     }
 
-    public void setDatefin(int datefin) {
+    public void setDatefin(String datefin) {
         this.datefin = datefin;
     }
 

@@ -271,7 +271,7 @@
                 <Property name="text" type="java.lang.String" value="G&#xe9;rer les participants"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="modifieretude"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gererppant"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="creeretude">
@@ -302,6 +302,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Valider"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="valideretude"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
