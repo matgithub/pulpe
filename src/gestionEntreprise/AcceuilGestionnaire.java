@@ -48,11 +48,12 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         int id;
         comboEnt.removeAllItems();
         listeetude.removeAllItems();
+        comboEtu.removeAllItems();
         try {
             openConnection();
             java.sql.Statement requete = conn.createStatement();
             java.sql.ResultSet resulent = requete.executeQuery(
-            "select * from ENTREPRISE");
+            "select * from ENTREPRISE ORDER BY IDENT");
             while (resulent.next()) {
                 nom = resulent.getString(2);
                 id = resulent.getInt(1);
@@ -68,11 +69,27 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             openConnection();
             java.sql.Statement requete = conn.createStatement();
             java.sql.ResultSet resuletu = requete.executeQuery(
-            "select * from ETUDE");
+            "select * from ETUDE ORDER BY IDCONVENTION");
             while (resuletu.next()) {
                 nom = resuletu.getString(4);
                 id = resuletu.getInt(2);
                 listeetude.addItem(makeObj(id+ " -- " +nom));
+            }
+            resuletu.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException e) {
+            Model.addElement("Erreur execution requete " + e.getMessage());
+        }
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resuletu = requete.executeQuery(
+            "select * from ETUDIANT ORDER BY IDETUDIANT");
+            while (resuletu.next()) {
+                nom = resuletu.getString(2);
+                id = resuletu.getInt(1);
+                comboEtu.addItem(makeObj(id+ " -- " +nom));
             }
             resuletu.close();
             requete.close();
@@ -119,6 +136,13 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         etude = new javax.swing.JList();
         jButton2 = new javax.swing.JButton();
         Etudiant = new javax.swing.JPanel();
+        comboEtu = new javax.swing.JComboBox();
+        créerEtu = new javax.swing.JButton();
+        suiviEtu = new javax.swing.JButton();
+        gererFraisEtu = new javax.swing.JButton();
+        gererAccEtu = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        affEtu = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -143,7 +167,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             .addGroup(AcceuilLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(AcceuilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -152,7 +176,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             .addGroup(AcceuilLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 186, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -161,21 +185,21 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(affEnt);
 
-        afficherEnt.setText("afficher");
+        afficherEnt.setText("Afficher");
         afficherEnt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 afficherEnt(evt);
             }
         });
 
-        créerEnt.setText("créer");
+        créerEnt.setText("Créer");
         créerEnt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 creerEnt(evt);
             }
         });
 
-        modifierEnt.setText("modifier");
+        modifierEnt.setText("Modifier");
         modifierEnt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modifEnt(evt);
@@ -189,7 +213,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             .addGroup(EntrepriseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(EntrepriseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                     .addGroup(EntrepriseLayout.createSequentialGroup()
                         .addComponent(comboEnt, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -262,7 +286,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                         .addComponent(creeretude)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2)
-                        .addGap(0, 6, Short.MAX_VALUE)))
+                        .addGap(0, 26, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EtudeLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -287,15 +311,61 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
 
         AcceuilGestionnaire.addTab("Etude", Etude);
 
+        créerEtu.setText("Créer");
+        créerEtu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                créerEtudiant(evt);
+            }
+        });
+
+        suiviEtu.setText("Suivi");
+
+        gererFraisEtu.setText("Gerer les frais");
+
+        gererAccEtu.setText("Gerer les accompte");
+
+        jScrollPane3.setViewportView(affEtu);
+
         javax.swing.GroupLayout EtudiantLayout = new javax.swing.GroupLayout(Etudiant);
         Etudiant.setLayout(EtudiantLayout);
         EtudiantLayout.setHorizontalGroup(
             EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 600, Short.MAX_VALUE)
+            .addGroup(EtudiantLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addGroup(EtudiantLayout.createSequentialGroup()
+                        .addComponent(comboEtu, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(gererAccEtu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(gererFraisEtu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(créerEtu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(suiviEtu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         EtudiantLayout.setVerticalGroup(
             EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 406, Short.MAX_VALUE)
+            .addGroup(EtudiantLayout.createSequentialGroup()
+                .addGroup(EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(EtudiantLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(créerEtu)
+                            .addComponent(gererFraisEtu))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(EtudiantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(suiviEtu)
+                            .addComponent(gererAccEtu)))
+                    .addGroup(EtudiantLayout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(comboEtu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         AcceuilGestionnaire.addTab("Etudiant", Etudiant);
@@ -337,24 +407,27 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         bdd.setVisible(true);
         
         //on ajoute la nouvelle ligne à la base :
-        
-        try {
-            openConnection();
-            java.sql.PreparedStatement requete = conn.prepareStatement(
-                    "insert into entreprise (IDENT,NOMENT,ADRESSEENT,TELENT) "
-                    + "values (? , ? , ? , ?)");
+        if (e.nom == ""){
             
-            requete.setInt(1,e.getId());
-            requete.setString(2, e.getNom());
-            requete.setString(3, e.getAdr());
-            requete.setString(4, e.getTel());
-            requete.executeUpdate();
-            
-             
-            requete.close();
-            closeConnection();
-        } catch (java.sql.SQLException ex) {
-            Model.addElement("Erreur execution requete " + ex.getMessage());
+        }else {
+            try {
+                openConnection();
+                java.sql.PreparedStatement requete = conn.prepareStatement(
+                        "insert into entreprise (IDENT,NOMENT,ADRESSEENT,TELENT) "
+                        + "values (? , ? , ? , ?)");
+
+                requete.setInt(1,e.getId());
+                requete.setString(2, e.getNom());
+                requete.setString(3, e.getAdr());
+                requete.setString(4, e.getTel());
+                requete.executeUpdate();
+
+
+                requete.close();
+                closeConnection();
+            } catch (java.sql.SQLException ex) {
+                Model.addElement("Erreur execution requete " + ex.getMessage());
+            }
         }
         remplirListes ();
 
@@ -589,6 +662,52 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_valideretude
 
+    private void créerEtudiant(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_créerEtudiant
+        int newid=0;
+        try {
+            openConnection();
+            java.sql.Statement requete = conn.createStatement();
+            java.sql.ResultSet resul = requete.executeQuery(
+            "select max(IDETUDIANT) from etudiant");
+            resul.next();
+            
+            newid = resul.getInt(1);
+            resul.close();
+            requete.close();
+            closeConnection();
+        } catch (java.sql.SQLException e) {
+            Model.addElement("Erreur execution requete " + e.getMessage());
+        }
+        
+        Etudiant e= new Etudiant(newid);
+        CreationEtudiant bdd =new CreationEtudiant(this, true, e);
+        bdd.setLocation(500, 400);
+        bdd.setVisible(true);
+        
+        //on ajoute la nouvelle ligne à la base :
+        if (e.nom == ""){
+            
+        }else {
+            try {
+                openConnection();
+                java.sql.PreparedStatement requete = conn.prepareStatement(
+                        "insert into ETUDIANT (IDETUDIANT,NOMETUDIANT) "
+                        + "values (? , ?)");
+
+                requete.setInt(1,e.getId());
+                requete.setString(2, e.getNom());
+                requete.executeUpdate();
+
+
+                requete.close();
+                closeConnection();
+            } catch (java.sql.SQLException ex) {
+                Model.addElement("Erreur execution requete " + ex.getMessage());
+            }
+        }
+        remplirListes ();
+    }//GEN-LAST:event_créerEtudiant
+
     /**
      * @param args the command line arguments
      */
@@ -630,21 +749,28 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
     private javax.swing.JPanel Etude;
     private javax.swing.JPanel Etudiant;
     private javax.swing.JList affEnt;
+    private javax.swing.JList affEtu;
     private javax.swing.JButton afficherEnt;
     private javax.swing.JButton afficheretude;
     private javax.swing.JComboBox comboEnt;
+    private javax.swing.JComboBox comboEtu;
     private javax.swing.JButton creeretude;
     private javax.swing.JButton créerEnt;
+    private javax.swing.JButton créerEtu;
     private javax.swing.JScrollPane detailetude;
     private javax.swing.JList etude;
+    private javax.swing.JButton gererAccEtu;
+    private javax.swing.JButton gererFraisEtu;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JComboBox listeetude;
     private javax.swing.JButton modifierEnt;
     private javax.swing.JButton modifieretude;
+    private javax.swing.JButton suiviEtu;
     // End of variables declaration//GEN-END:variables
 private javax.swing.DefaultListModel Model = new javax.swing.DefaultListModel();
 private java.sql.Connection conn;

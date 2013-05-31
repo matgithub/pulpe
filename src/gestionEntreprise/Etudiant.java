@@ -8,16 +8,14 @@ package gestionEntreprise;
  *
  * @author p1205670
  */
-public class Entreprise {
+public class Etudiant {
     
     static int cpt=0;// a initialiser avec le dernier id creer en table mais comment faire ^^
     
     public int id;
     public String nom;
-    public String adr;
-    public String tel;
 
-    public Entreprise(int lastid) {
+    public Etudiant(int lastid) {
         cpt=lastid;
         cpt++;
         this.id = cpt;
@@ -39,22 +37,5 @@ public class Entreprise {
     public void setNom(String nom) {
         this.nom = nom;
     }
-
-    public String getAdr() {
-        return adr;
-    }
-
-    public void setAdr(String adr) {
-        this.adr = adr;
-    }
-
-    public String getTel() {
-        return tel;
-    }
-
-    public void setTel(String tel) {
-        this.tel = tel;
-    }
-    
     
 }
