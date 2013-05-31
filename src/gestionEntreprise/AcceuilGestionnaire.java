@@ -6,6 +6,8 @@
 package gestionEntreprise;
 import java.sql.*;
 import java.lang.Class.*;
+import java.util.*;
+
 
 /**
  *
@@ -235,7 +237,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                     .addComponent(modifierEnt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         AcceuilGestionnaire.addTab("Entreprise", Entreprise);
@@ -304,7 +306,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modifieretude)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addComponent(detailetude, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53))
         );
@@ -319,6 +321,11 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         });
 
         suiviEtu.setText("Suivi");
+        suiviEtu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                suiviEtudiant(evt);
+            }
+        });
 
         gererFraisEtu.setText("Gerer les frais");
 
@@ -365,7 +372,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                         .addComponent(comboEtu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
 
         AcceuilGestionnaire.addTab("Etudiant", Etudiant);
@@ -707,6 +714,20 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         }
         remplirListes ();
     }//GEN-LAST:event_créerEtudiant
+
+    private void suiviEtudiant(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_suiviEtudiant
+        int id;
+        String l,req;
+        String [] t;
+        l = comboEtu.getSelectedItem().toString();
+        t = l.split(" ");
+        
+        id = Integer.parseInt(t[0]);
+        SuiviEtudiant bdd =new SuiviEtudiant(this, true, id);
+        bdd.setLocation(500, 400);
+        bdd.setVisible(true);
+        
+    }//GEN-LAST:event_suiviEtudiant
 
     /**
      * @param args the command line arguments
