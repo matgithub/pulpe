@@ -56,7 +56,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             while (resulent.next()) {
                 nom = resulent.getString(2);
                 id = resulent.getInt(1);
-                comboEnt.addItem(makeObj(id+" "+nom));
+                comboEnt.addItem(makeObj(id+ " -- " +nom));
             }
             resulent.close();
             requete.close();
@@ -72,7 +72,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             while (resuletu.next()) {
                 nom = resuletu.getString(4);
                 id = resuletu.getInt(2);
-                listeetude.addItem(makeObj(id+" "+nom));
+                listeetude.addItem(makeObj(id+ " -- " +nom));
             }
             resuletu.close();
             requete.close();
