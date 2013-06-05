@@ -31,7 +31,7 @@ public class SuiviEtudiant extends javax.swing.JDialog {
         conn = java.sql.DriverManager.getConnection(URL, userid, password);
 
         if (conn == null) {
-            Model.addElement("Probleme de connection.");
+            ModelInfo.addElement("Probleme de connection.");
             System.exit(1);
         }
     }
@@ -42,30 +42,35 @@ public class SuiviEtudiant extends javax.swing.JDialog {
     
     public void rempirListEtude () {
         String Sreqlist;
-        conteneur detail = new conteneur();
-        int idetude;
         listEtude.removeAllItems();
-        Sreqlist = "select IDCONVENTION from ASSOCIATION WHERE IDETUDIANT ="+idetudiant+
-                "join ETUDE on ASSOCIATION.IDCONVENTION = ETUDE.IDCONVENTION";
+        Sreqlist = "select * from ASSOCIATION join ETUDE "
+                + "on ASSOCIATION.IDCONVENTION = ETUDE.IDCONVENTION "
+                + "WHERE IDETUDIANT ="+idetudiant;
+        
         try {
+            listEtude.addItem("Selectionner l'étude à détailler");
             openConnection();
             java.sql.Statement reqlist = conn.createStatement();
             java.sql.ResultSet resullist = reqlist.executeQuery(Sreqlist);
             while (resullist.next()) {
-                
-                //en cours : remplir la map avec les conteneur 
-                
+                conteneur detail = new conteneur();
+
+                //on remplit la map avec les conteneur
+                detail.setNbjours(resullist.getInt("NBJOURS"));
+                detail.setStatus(resullist.getInt("STATUTETUDIANT"));
                 detail.setNom_etude(resullist.getString("NOMETUDE"));
-                idetude = resullist.getInt("IDCONVENTION");
-                listEtude.addItem(makeObj(idetude+ " -- " +detail.getNom_etude()));
-                
+                detail.setIdconvention(resullist.getInt("IDCONVENTION"));
+                listEtude.addItem(makeObj(detail.getIdconvention()+ " -- " +detail.getNom_etude()));
+                ensemble.put(resullist.getInt("IDCONVENTION"), detail);
+                System.out.println(ensemble.values());
             
             }
             reqlist.close();
             resullist.close();
             closeConnection();
         } catch (java.sql.SQLException e) {
-            Model.addElement("Erreur execution requete " + e.getMessage());
+            ModelInfo.addElement("Erreur execution requete " + e.getMessage());
+            affInfoEtude.setModel(ModelInfo);
         }
     }
     
@@ -73,6 +78,7 @@ public class SuiviEtudiant extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         SuiviEtudiant.idetudiant = idetudiant;
+        rempirListEtude();
     }
 
     /**
@@ -86,12 +92,18 @@ public class SuiviEtudiant extends javax.swing.JDialog {
 
         listEtude = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        affEtude = new javax.swing.JList();
+        affInfoEtude = new javax.swing.JList();
         retour = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jScrollPane1.setViewportView(affEtude);
+        listEtude.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                affEtude(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(affInfoEtude);
 
         retour.setText("Retour");
         retour.addActionListener(new java.awt.event.ActionListener() {
@@ -133,16 +145,38 @@ public class SuiviEtudiant extends javax.swing.JDialog {
         setVisible(false);
     }//GEN-LAST:event_retour
 
+    private void affEtude(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_affEtude
+        ModelInfo.clear();
+        int id;
+        String l;
+        String [] t;
+        conteneur etude;
+        l = listEtude.getSelectedItem().toString();
+        t = l.split(" ");
+        if (!(Character.isDigit( t[0].charAt(0)))) {
+            ModelInfo.addElement("sélectionner une étude");
+            affInfoEtude.setModel(ModelInfo);
+        }else {
+            id = Integer.parseInt(t[0]);
+
+            etude = ensemble.get(id);
+            ModelInfo.addElement("Pour létude : "+etude.getNom_etude()+" l'élève était :"+etude.getStatus()+".");
+            ModelInfo.addElement("Il a travailler : "+etude.getNbjours()+" jour(s).");
+            ModelInfo.addElement("Pour un total de :"+etude.getIndemnite()+" € versé le : "+etude.getDate_paie()+".");
+            affInfoEtude.setModel(ModelInfo);
+        }
+    }//GEN-LAST:event_affEtude
+
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList affEtude;
+    private javax.swing.JList affInfoEtude;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox listEtude;
     private javax.swing.JButton retour;
     // End of variables declaration//GEN-END:variables
     static int idetudiant;
-    private javax.swing.DefaultListModel Model = new javax.swing.DefaultListModel();
+    private javax.swing.DefaultListModel ModelInfo = new javax.swing.DefaultListModel();
     private java.sql.Connection conn;
-    HashMap<Integer, conteneur> enssemble = new HashMap<>();
+    HashMap<Integer, conteneur> ensemble = new HashMap<>();
 }

@@ -66,6 +66,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             closeConnection();
         } catch (java.sql.SQLException e) {
             Model.addElement("Erreur execution requete " + e.getMessage());
+            affEnt.setModel(Model);
         }
         try {
             openConnection();
@@ -82,6 +83,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             closeConnection();
         } catch (java.sql.SQLException e) {
             Model.addElement("Erreur execution requete " + e.getMessage());
+            etude.setModel(Model);
         }
         try {
             openConnection();
@@ -98,6 +100,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             closeConnection();
         } catch (java.sql.SQLException e) {
             Model.addElement("Erreur execution requete " + e.getMessage());
+            affEtu.setModel(Model);
         }
     }
     

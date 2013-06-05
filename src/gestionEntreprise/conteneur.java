@@ -10,14 +10,26 @@ package gestionEntreprise;
  */
 public class conteneur {
     String status,date_paie,nom_etude;
-    int nbjours,indemnite;
+    int nbjours,indemnite,idconvention;
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public int getIdconvention() {
+        return idconvention;
+    }
+
+    public void setIdconvention(int idconvention) {
+        this.idconvention = idconvention;
+    }
+
+    public void setStatus(int status) {
+        if (status == 0) {
+            this.status="responsable";
+        }else {
+            this.status="collaborateur";
+        }
     }
 
     public String getDate_paie() {
