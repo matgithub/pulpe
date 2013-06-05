@@ -62,7 +62,6 @@ public class SuiviEtudiant extends javax.swing.JDialog {
                 detail.setIdconvention(resullist.getInt("IDCONVENTION"));
                 listEtude.addItem(makeObj(detail.getIdconvention()+ " -- " +detail.getNom_etude()));
                 ensemble.put(resullist.getInt("IDCONVENTION"), detail);
-                System.out.println(ensemble.values());
             
             }
             reqlist.close();

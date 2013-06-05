@@ -333,6 +333,11 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         gererFraisEtu.setText("Gerer les frais");
 
         gererAccEtu.setText("Gerer les accompte");
+        gererAccEtu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GestionAccompte(evt);
+            }
+        });
 
         jScrollPane3.setViewportView(affEtu);
 
@@ -409,6 +414,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             closeConnection();
         } catch (java.sql.SQLException e) {
             Model.addElement("Erreur execution requete " + e.getMessage());
+            affEnt.setModel(Model);
         }
         
         Entreprise e= new Entreprise(newid);
@@ -437,6 +443,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
                 closeConnection();
             } catch (java.sql.SQLException ex) {
                 Model.addElement("Erreur execution requete " + ex.getMessage());
+                affEnt.setModel(Model);
             }
         }
         remplirListes ();
@@ -475,6 +482,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             closeConnection();
         } catch (java.sql.SQLException ex) {
             Model.addElement("Erreur execution requete " + ex.getMessage());
+            affEnt.setModel(Model);
         }
         try {
             openConnection();
@@ -492,6 +500,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             closeConnection();
         } catch (java.sql.SQLException e) {
             Model.addElement("Erreur execution requete " + e.getMessage());
+            affEnt.setModel(Model);
         }
         
         affEnt.setModel(Model);
@@ -537,6 +546,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             closeConnection();
         } catch (java.sql.SQLException ex) {
             Model.addElement("Erreur execution requete " + ex.getMessage());
+            affEnt.setModel(Model);
         }
         
         ModifEntreprise bdd =new ModifEntreprise(this, true, e);
@@ -571,6 +581,7 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
             closeConnection();
         } catch (java.sql.SQLException ex) {
             Model.addElement("Erreur execution requete " + ex.getMessage());
+            affEnt.setModel(Model);
         }
         
         remplirListes ();
@@ -731,6 +742,19 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         bdd.setVisible(true);
         
     }//GEN-LAST:event_suiviEtudiant
+
+    private void GestionAccompte(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GestionAccompte
+        int id;
+        String l,req;
+        String [] t;
+        l = comboEtu.getSelectedItem().toString();
+        t = l.split(" ");
+        
+        id = Integer.parseInt(t[0]);
+        GestionAccompte bdd =new GestionAccompte(this, true, id);
+        bdd.setLocation(500, 400);
+        bdd.setVisible(true);
+    }//GEN-LAST:event_GestionAccompte
 
     /**
      * @param args the command line arguments
