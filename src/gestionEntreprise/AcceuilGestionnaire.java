@@ -331,6 +331,11 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         });
 
         gererFraisEtu.setText("Gerer les frais");
+        gererFraisEtu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gestionFrais(evt);
+            }
+        });
 
         gererAccEtu.setText("Gerer les accompte");
         gererAccEtu.addActionListener(new java.awt.event.ActionListener() {
@@ -755,6 +760,19 @@ public class AcceuilGestionnaire extends javax.swing.JFrame {
         bdd.setLocation(500, 400);
         bdd.setVisible(true);
     }//GEN-LAST:event_GestionAccompte
+
+    private void gestionFrais(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gestionFrais
+        int id;
+        String l,req;
+        String [] t;
+        l = comboEtu.getSelectedItem().toString();
+        t = l.split(" ");
+        
+        id = Integer.parseInt(t[0]);
+        gestionFrais bdd =new gestionFrais(this, true, id);
+        bdd.setLocation(500, 400);
+        bdd.setVisible(true);
+    }//GEN-LAST:event_gestionFrais
 
     /**
      * @param args the command line arguments
